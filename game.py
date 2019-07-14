@@ -3,6 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.uic import *
 from PyQt5.QtGui import *
+import os
 
 
 class create(QWidget):
@@ -25,7 +26,7 @@ class create(QWidget):
         self.Religion.addItems(["Atheist", "Christian", "Catholic", "Muslim",
                            "Hindu", "Bhuddist"])
         #Connect Debuffs and Done
-        #self.done.clicked.connect(self.done_clicked)
+        self.done.clicked.connect(self.done_clicked)
         self.anxiety.clicked.connect(self.anxiety_clicked)
         self.depression.clicked.connect(self.depression_clicked)
         self.schizophrenia.clicked.connect(self.schizophrenia_clicked)
@@ -141,8 +142,35 @@ class create(QWidget):
         elif self.dex.value() < self.dexv:
             self.pts.setValue(self.pts.value() + 1)
             self.dexv = self.dex.value()
+    #moves to next window/saves data when next_clicked is clicked
+    @pyqtSlot()
+    def done_clicked(self):
+        if os.path.exists("savedata.txt"):
+            os.remove("savedata.txt")
+        savedata = open("savedata.txt", "w+")
+        savedata.write(str(self.int_2.value()) + "/" + str(self.ath.value()) + "/" + str(self.cha.value()) + "/" + str(self.att.value()) + "/" + str(self.dex.value()) + "/")
+        savedata.write(self.Race.currentText() + "/" + self.Gender.currentText() + "/" + self.Co.currentText() + "/"+ self.Religion.currentText() + "/")
+        savedata.write(self.F_Name.text() + "/" + self.L_Name.text() + "/")
+
+        savedata.close()
+        self.hide()
+        main.show()
+
+#main game window
+class main(QWidget):
+    def __init__(self):
+        super(main, self).__init__()
+        loadUi("main.ui", self)
+        self.stats.clicked.connect(self.stats_clicked)
+
+    @pyqtSlot()
+    def stats_clicked(self):
+        self.hide()
 
 app = QApplication(sys.argv)
+
+main = main()
 widget = create()
+main.hide()
 widget.show()
 sys.exit(app.exec_())
