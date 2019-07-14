@@ -46,39 +46,39 @@ class create(QWidget):
     @pyqtSlot()
     def anxiety_clicked(self):
         if self.anxiety.isChecked():
-            self.pts.setValue(self.pts.value() + 3)
-        else:
-            self.pts.setValue(self.pts.value() - 3)
-    @pyqtSlot()
-    def depression_clicked(self):
-        if self.depression.isChecked():
             self.pts.setValue(self.pts.value() + 4)
         else:
             self.pts.setValue(self.pts.value() - 4)
     @pyqtSlot()
-    def schizophrenia_clicked(self):
-        if self.schizophrenia.isChecked():
+    def depression_clicked(self):
+        if self.depression.isChecked():
             self.pts.setValue(self.pts.value() + 5)
         else:
             self.pts.setValue(self.pts.value() - 5)
+    @pyqtSlot()
+    def schizophrenia_clicked(self):
+        if self.schizophrenia.isChecked():
+            self.pts.setValue(self.pts.value() + 7)
+        else:
+            self.pts.setValue(self.pts.value() - 7)
     @pyqtSlot()
     def adhd_clicked(self):
         if self.adhd.isChecked():
-            self.pts.setValue(self.pts.value() + 2)
+            self.pts.setValue(self.pts.value() + 3)
         else:
-            self.pts.setValue(self.pts.value() - 2)
+            self.pts.setValue(self.pts.value() - 3)
     @pyqtSlot()
     def uwalk_clicked(self):
         if self.uwalk.isChecked():
-            self.pts.setValue(self.pts.value() + 6)
+            self.pts.setValue(self.pts.value() + 10)
         else:
-            self.pts.setValue(self.pts.value() - 6)
+            self.pts.setValue(self.pts.value() - 10)
     @pyqtSlot()
     def cancer_clicked(self):
         if self.cancer.isChecked():
-            self.pts.setValue(self.pts.value() + 5)
+            self.pts.setValue(self.pts.value() + 7)
         else:
-            self.pts.setValue(self.pts.value() - 5)
+            self.pts.setValue(self.pts.value() - 7)
     @pyqtSlot()
     def pinjury_clicked(self):
         if self.pinjury.isChecked():
@@ -166,9 +166,46 @@ class main(QWidget):
     @pyqtSlot()
     def stats_clicked(self):
         self.hide()
+        stat.update_stats()
+        stat.show()
+
+#statistics display
+class stat(QWidget):
+    def __init__(self):
+        super(stat, self).__init__()
+        loadUi("stats.ui", self)
+
+    def update_stats(self):
+        #load savefile to find data
+        savedata = open("savedata.txt", "r+")
+        #find stats
+        txt = savedata.read()
+        lis = []
+        temp_var = ""
+        for i in txt:
+            if i != "/":
+                temp_var = temp_var + i
+            else:
+                lis.append(temp_var)
+                temp_var = ""
+        #updates the text labels
+        self.int_2.setText(str(lis[0]))
+        self.ath.setText(str(lis[1]))
+        self.cha.setText(str(lis[2]))
+        self.att.setText(str(lis[3]))
+        self.dex.setText(str(lis[4]))
+        self.country.setText(str(lis[5]))
+        self.race.setText(str(lis[6]))
+        self.gender.setText(str(lis[7]))
+        self.religion.setText(str(lis[8]))
+        self.firstname.setText(str(lis[9]))
+        self.lastname.setText(str(lis[10]))
+
+            
+                
 
 app = QApplication(sys.argv)
-
+stat = stat()
 main = main()
 widget = create()
 main.hide()
